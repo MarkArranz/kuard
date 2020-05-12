@@ -4,8 +4,12 @@ metadata:
   name: kuard
 spec:
   containers:
-  - image: markarranz/kuard-amd64:blue
-    name: kuard
+  - name: kuard
+    image: markarranz/kuard-amd64:blue
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "128Mi"
     livenessProbe:
         httpGet:
           path: /healthy
