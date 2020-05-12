@@ -3,17 +3,21 @@ kind: Pod
 metadata:
   name: kuard
 spec:
+  volumes:
+    - name: "kuard-data"
+      hostPath:
+        path: "/var/lib/kuard"
   containers:
-  - name: kuard
-    image: markarranz/kuard-amd64:blue
-    resources:
-      requests:
-        cpu: "500m"
-        memory: "128Mi"
-      limits:
-        cpu: "1000m"
-        memory: "256Mi"
-    livenessProbe:
+    - name: kuard
+      image: markarranz/kuard-amd64:blue
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "128Mi"
+        limits:
+          cpu: "1000m"
+          memory: "256Mi"
+      livenessProbe:
         httpGet:
           path: /healthy
           port: 8080
@@ -21,7 +25,10 @@ spec:
         timeoutSeconds: 1
         periodSeconds: 10
         failureThreshold: 3
-    ports:
-      - containerPort: 8080
-        name: http
-        protocol: TCP
+      volumeMounts:
+        - mountPath: "/data"
+          name: "kuard-data"
+      ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
